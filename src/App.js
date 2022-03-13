@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import ReactDOM from 'react-dom';
 
 import { v4 as uuid } from 'uuid';
 
@@ -70,15 +71,18 @@ const NewUser = props => {
 	}
 
 	return (
-		<div>
-			<Modal
-				title={'Wrong input'}
-				content={
-					<p>Please, take a look at the input. Both fields must be filled.</p>
-				}
-				visible={isVisibleModal}
-				onClose={modalCloseHandler}
-			/>
+		<>
+			{ReactDOM.createPortal(
+				(
+					<Modal
+						title={'Wrong input'}
+						content={<p>Please, take a look at the input. Both fields must be filled.</p>}
+						visible={isVisibleModal}
+						onClose={modalCloseHandler}
+					/>
+				), 
+				document.getElementById('overlay-root'),
+			)}
 			<div className="new-user">
 				<form action="" onSubmit={userCreationHandler}>
 					<div className="fields">
@@ -96,7 +100,7 @@ const NewUser = props => {
 					</div>
 				</form>
 			</div>
-		</div>
+		</>
 	)
 }
 

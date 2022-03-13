@@ -22,9 +22,25 @@ const NewUserSection = props => {
 	)
 }
 
+const Modal = props => {
+	return props.visible ? (
+		<div className="modal-container">
+			<Card>
+				<header>
+					<h2>{props.title}</h2>
+					<Button onClick={props.onClose} className="icon-button"><i class="fas fa-times"></i></Button>
+				</header>
+				<div class="content"> {props.content}
+				</div>
+			</Card>
+		</div>
+	): null
+}
+
 const NewUser = props => {
 	const [fullName, setFullName] = useState('');
 	const [details, setDetails] = useState('');
+	const [isVisibleModal, setIsVisibleModal] = useState(false);
 
 	const onFullNameChange = event => {
 		setFullName(event.target.value);
@@ -36,34 +52,50 @@ const NewUser = props => {
 
 	const userCreationHandler = event => {
 		event.preventDefault();
-		props.onUserCreation({
-			fullName: fullName,
-			details: details,
-			id: uuid(),
-		});
-		setFullName('');
-		setDetails('');
+		if (fullName.trim().length > 0 && details.trim().length > 0) {
+			props.onUserCreation({
+				fullName: fullName,
+				details: details,
+				id: uuid(),
+			});
+			setFullName('');
+			setDetails('');
+		} else {
+			setIsVisibleModal(true);
+		}
+	}
+
+	const modalCloseHandler = () => {
+		setIsVisibleModal(false);
 	}
 
 	return (
-		<div className="new-user">
-			<form action="" onSubmit={userCreationHandler}>
-				<div className="fields">
-					<div className="field">
-						<label>Full Name
-							<input onChange={onFullNameChange} value={fullName} type="text" name="full-name" />
-						</label>
+		<div>
+			<Modal
+				title={'Wrong input'}
+				content={
+					<p>Please, take a look at the input. Both fields must be filled.</p>
+				}
+				visible={isVisibleModal}
+				onClose={modalCloseHandler}
+			/>
+			<div className="new-user">
+				<form action="" onSubmit={userCreationHandler}>
+					<div className="fields">
+						<div className="field">
+							<label htmlFor="full-name">Full Name</label>
+							<input id="full-name" onChange={onFullNameChange} value={fullName} type="text" name="full-name" />
+						</div>
+						<div className="field">
+							<label htmlFor="details">Details</label>
+							<input id="details" onChange={onDetailsChange} value={details} type="text" name="details" />
+						</div>
 					</div>
-					<div className="field">
-						<label>Details
-							<input onChange={onDetailsChange} value={details} type="text" name="details" />
-						</label>
+					<div className="controls">
+						<Button type="submit">Create</Button>
 					</div>
-				</div>
-				<div className="controls">
-					<Button type="submit">Create</Button>
-				</div>
-			</form>
+				</form>
+			</div>
 		</div>
 	)
 }
@@ -134,13 +166,13 @@ function App() {
 	const [users, setUsers] = useState([
 		{
 			id: '1',
-			fullName: 'A',
-			details: 'B',
+			fullName: 'Albert',
+			details: 'Lorem reiciendis quis quo iusto ipsum! Accusantium quos animi cumque recusandae ducimus obcaecati aperiam. Vero sit quas officiis odit quibusdam? Voluptatibus natus asperiores ullam distinctio tempore. Eos magnam saepe nulla',
 		},
 		{
 			id: '2',
-			fullName: 'A',
-			details: 'B',
+			fullName: 'Williams',
+			details: 'Lorem reiciendis quis quo iusto ipsum! Accusantium quos animi cumque recusandae ducimus obcaecati aperiam. Vero sit quas officiis odit quibusdam? Voluptatibus natus asperiores ullam distinctio tempore. Eos magnam saepe nulla',
 		},
 	]);
 
